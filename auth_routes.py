@@ -4,9 +4,10 @@ from typing import Optional
 from database import Session,engine
 from schemas import SignUpModel, LoginModel
 from models import User
-from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import generate_password_hash
 from fastapi_jwt_auth import AuthJWT
 from fastapi.encoders import jsonable_encoder
+import secrets
 
 auth_router = APIRouter(
     prefix = '/auth',
@@ -55,10 +56,10 @@ async def signup(user:SignUpModel):
 async def login(user:LoginModel,Authorize:AuthJWT=Depends()):
     db_user=session.query(User).filter(User.username==user.username).first()
     
-    if db_user and check_password_hash(db_user.password, user.password):
+    if db_user and secrets.compare_digest(db_user.password, user.password):
         access_token = Authorize.create_access_token(subject=db_user.username)
         refresh_token=Authorize.create_refresh_token(subject=db_user.username)
-        
+
         response={
             "access":access_token,
             "refresh":refresh_token
