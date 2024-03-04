@@ -45,3 +45,15 @@ class OrderModel(BaseModel):
                 "pizza_size": "LARGE"
             }
         }
+
+class OrderStatutModel(BaseModel):
+    order_status: Optional[str] = "PENDING"
+    
+    class Config:
+        orm_mode = True
+        schema_extra = {
+            "example":{
+                "order_status": "PENDING"
+            }
+        }
+        
