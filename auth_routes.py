@@ -71,5 +71,4 @@ async def login(user:LoginModel,Authorize:AuthJWT=Depends()):
                         detail="Invalid Username or Password"
                         )
  
-    
         
