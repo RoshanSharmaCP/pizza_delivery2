@@ -5,7 +5,6 @@ from sqlalchemy.orm import relationship
 
 
 
-
 class User(Base):
     __tablename__='user'
     id=Column(Integer,primary_key=True)
@@ -15,6 +14,7 @@ class User(Base):
     is_staff=Column(Boolean,default=False)
     is_active=Column(Boolean,default=False)
     orders=relationship('Order',back_populates='user')
+    invalid_tokens = relationship('InvalidToken', back_populates='user')
 
 
     def __repr__(self):
@@ -33,3 +33,10 @@ class Order(Base):
 
     def __repr__(self):
         return f"<Order {self.id}>"
+    
+class InvalidToken(Base):
+    __tablename__ = 'invalid_tokens'
+    id = Column(Integer, primary_key=True, index=True)
+    token = Column(String, index=True)
+    user_id = Column(Integer, ForeignKey('user.id'))
+    user = relationship('User', back_populates='invalid_tokens')
