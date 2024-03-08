@@ -55,7 +55,6 @@ async def signup(user:SignUpModel):
 @auth_router.post('/login', status_code=200)
 async def login(user:LoginModel,Authorize:AuthJWT=Depends()):
     db_user=session.query(User).filter(User.username==user.username).first()
-    # breakpoint()
     if db_user and secrets.compare_digest(db_user.password, user.password):
         raw_jwt = Authorize.get_raw_jwt()
         if raw_jwt is not None and 'jti' in raw_jwt:
@@ -79,14 +78,6 @@ async def login(user:LoginModel,Authorize:AuthJWT=Depends()):
     
 @auth_router.post('/invalidate-token')
 async def invalidate_token(token: str = Query(..., title="Token"), Authorize: AuthJWT = Depends()):
-    # try:
-    #     Authorize.jwt_required()
-    # except Exception as e:
-    #     raise HTTPException(
-    #         status_code= status.HTTP_401_UNAUTHORIZED,
-    #         detail = "Invalid Token"
-    #     )
-    breakpoint()
     current_user = Authorize.get_jwt_subject()
     
     db_user = session.query(User).filter(User.username == current_user).first()
